@@ -1,3 +1,5 @@
 lead_id,status,follow_up_count,last_contact,next_action
 L001,approved_sent,1,2026-02-09 19:28:31.603962,Follow up with customised email offering demo or trial
 L002,approved_sent,1,2026-02-09 19:48:25.396278,Send a follow-up email with more information about AI solutions for coaching businesses
+L003,approved,1,2026-02-10 00:49:04.710012,Send a follow-up email with a brief overview of the product or service and ask if they have any specific questions
+L004,approved,1,2026-02-10 00:49:16.609389,Schedule a call to discuss lead management options and provide a solution

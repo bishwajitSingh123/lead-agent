@@ -2,9 +2,7 @@ import pandas as pd
 import json
 from datetime import datetime
 import os
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+import resend
 from config import LEADS_FILE, STATE_FILE, OUTPUT_DIR, EMAIL_SENDER, EMAIL_PASSWORD, SMTP_SERVER, SMTP_PORT
 
 
@@ -93,42 +91,25 @@ def parse_json_response(response_text):
         print(f"⚠ Warning: Could not parse JSON: {e}")
         return None
 
+resend.api_key = os.getenv("RESEND_API_KEY")
 
 def send_email(to_email, subject, body, lead_id):
     """
-    Send email via SMTP (Gmail)
+    Send email via Resend API
     Returns: True if sent successfully, False otherwise
     """
     try:
-        # Validate email config
-        if not EMAIL_SENDER or not EMAIL_PASSWORD:
-            print("❌ Email credentials not configured in .env")
-            return False
-        
-        # Create message
-        msg = MIMEMultipart('alternative')
-        msg['From'] = EMAIL_SENDER
-        msg['To'] = to_email
-        msg['Subject'] = subject
-        
-        # Attach body
-        msg.attach(MIMEText(body, 'plain'))
-        
-        # Send via SMTP
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()  # Secure connection
-            server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-            server.send_message(msg)
-        
+        response = resend.Emails.send({
+            "from": "onboarding@resend.dev",  # test sender (works without domain)
+            "to": [to_email],
+            "subject": subject,
+            "text": body,
+        })
+
         print(f"✅ Email sent to {to_email} (Lead {lead_id})")
+        print(f"Resend ID: {response.get('id')}")
         return True
-        
-    except smtplib.SMTPAuthenticationError:
-        print("❌ Email authentication failed. Check EMAIL_PASSWORD (use App Password for Gmail)")
-        return False
-    except smtplib.SMTPException as e:
-        print(f"❌ SMTP error: {e}")
-        return False
+
     except Exception as e:
         print(f"❌ Failed to send email: {e}")
         return False
