@@ -1,0 +1,42 @@
+# Environment variables
+.env
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+outputs/*.log
+
+# Outputs
+outputs/drafts/*
+!outputs/drafts/.gitkeep
+
+# Data
+data/lead_state.csv
+
+# Backups
+*_backup.py
+*_old.py
+agent_old_backup.py
+agent_backup.py
+
+# OS
+.DS_Store
+Thumbs.db
