@@ -20,7 +20,13 @@ from tools import (
 # ----------------------------- 
 # Setup
 # ----------------------------- 
-load_dotenv()
+# Load .env file if it exists (for local development)
+# In Railway, environment variables are already set
+if os.path.exists('.env'):
+    load_dotenv()
+    logger_msg = "Loaded .env file"
+else:
+    logger_msg = "No .env file - using system environment variables"
 
 # Logging Configuration with UTF-8 support
 logging.basicConfig(
@@ -40,10 +46,11 @@ if sys.platform == 'win32':
         pass
 
 logger = logging.getLogger(__name__)
+logger.info(logger_msg)
 
 API_KEY = os.getenv("GROQ_API_KEY")
 if not API_KEY:
-    raise RuntimeError("GROQ_API_KEY missing in .env")
+    raise RuntimeError("GROQ_API_KEY not found in environment variables. Please set it in Railway.")
 
 client = Groq(api_key=API_KEY)
 
